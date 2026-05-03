@@ -152,7 +152,7 @@ export default function RegisterPage() {
                 <input
                   type={showPassword ? "text" : "password"}
                   name="password"
-                  placeholder="Minimal 8 karakter"
+                  placeholder="password harus diisi"
                   value={form.password}
                   onChange={handleChange}
                   required

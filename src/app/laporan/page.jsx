@@ -44,6 +44,13 @@ export default function LaporanSaya() {
   const [search, setSearch]                 = useState("");
   const [selectedReport, setSelectedReport] = useState(null);
   const [lightboxImg, setLightboxImg]       = useState(null);
+  const [isEditingReport, setIsEditingReport] = useState(false);
+const [editForm, setEditForm] = useState({
+  title: "",
+  description: "",
+  category_id: null,
+});
+const [savingReport, setSavingReport] = useState(false);
 
   // Comments
   const [comments, setComments]               = useState([]);
@@ -103,6 +110,20 @@ export default function LaporanSaya() {
     finally { setSendingComment(false); }
   };
 
+  const [categories, setCategories] = useState([]);
+
+useEffect(() => {
+  const fetchCategories = async () => {
+    const token = localStorage.getItem("token");
+    const res = await axios.get(`${API}/categories`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    setCategories(res.data);
+  };
+
+  fetchCategories();
+}, []);
+
   const handleEditComment = async (commentId) => {
     if (!editCommentText.trim()) return;
     const token = localStorage.getItem("token");
@@ -127,11 +148,79 @@ export default function LaporanSaya() {
     finally { setDeletingCommentId(null); }
   };
 
+  const handleUpdateReport = async () => {
+  const token = localStorage.getItem("token");
+
+  if (!editForm.title || !editForm.description) {
+    setError("Judul dan deskripsi wajib diisi");
+    return;
+  }
+
+  setSavingReport(true);
+
+  try {
+    await axios.put(
+  `${API}/laporan/${selectedReport.id}`,
+  {
+    title: editForm.title,
+    description: editForm.description,
+    category_id: Number(editForm.category_id),
+  },
+  { headers: { Authorization: `Bearer ${token}` } }
+);
+
+// update list dulu
+setReports(prev => {
+  const updated = prev.map(r =>
+    r.id === selectedReport.id
+      ? {
+          ...r,
+          title: editForm.title,
+          description: editForm.description,
+          category_id: Number(editForm.category_id),
+          category: categories.find(c => c.id === Number(editForm.category_id))?.name
+        }
+      : r
+  );
+
+  // ambil ulang data untuk modal dari hasil terbaru
+  const newSelected = updated.find(r => r.id === selectedReport.id);
+  setSelectedReport(newSelected);
+
+  return updated;
+});
+
+setIsEditingReport(false);
+
+    // refresh data
+    fetchReports(token, user.id);
+
+    // update data yang sedang dibuka
+    setSelectedReport({
+      ...selectedReport,
+      ...editForm,
+    });
+
+  } catch (err) {
+  console.log(err.response?.data); // 👈 WAJIB
+  setError(err.response?.data?.message || "Gagal update laporan");
+  } finally {
+    setSavingReport(false);
+  }
+};
+
   const openReport = (r) => {
     setSelectedReport(r);
     setComments([]);
     setNewComment("");
     setEditingCommentId(null);
+     setEditForm({
+    title: r.title || "",
+    description: r.description || "",
+    category_id: r.category_id ? Number(r.category_id) : null,
+  });
+
+  setIsEditingReport(false);
     fetchComments(r.id);
   };
 
@@ -300,7 +389,18 @@ export default function LaporanSaya() {
               <div className="flex flex-col lg:w-[55%] border-b lg:border-b-0 lg:border-r border-[#222] max-h-[45vh] lg:max-h-full">
                 <div className="flex items-center justify-between px-5 py-4 border-b border-[#222] shrink-0">
                   <div className="flex items-center gap-2.5">
-                    <p className="text-cream text-sm font-medium">Detail Laporan</p>
+                    <div className="flex items-center gap-2">
+  <p className="text-cream text-sm font-medium">Detail Laporan</p>
+
+  {selectedReport.status === "pending" && !isEditingReport && (
+    <button
+      onClick={() => setIsEditingReport(true)}
+      className="text-[10px] px-2.5 py-1 bg-gold text-dark rounded-lg hover:opacity-90"
+    >
+      Edit
+    </button>
+  )}
+</div>
                     <span className={`inline-flex items-center gap-1.5 text-[10px] px-2.5 py-1 rounded-full ${st.bg} ${st.text}`}>
                       <span className={`w-1.5 h-1.5 rounded-full ${st.dot}`} />
                       {st.label}
@@ -309,7 +409,7 @@ export default function LaporanSaya() {
                   <button onClick={closeModal} className="text-[#5C5850] hover:text-cream transition-colors"><CloseIcon size={16} /></button>
                 </div>
 
-                <div className="overflow-y-auto flex-1 px-5 py-4 space-y-4">
+                <div className="overflow-y-auto flex-1 px-5 py-4 space-y-4 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
                   {/* Foto */}
                   {imageUrl && (
                     <div>
@@ -327,13 +427,31 @@ export default function LaporanSaya() {
 
                   <div>
                     <p className="text-[#5C5850] text-[10px] uppercase tracking-widest mb-1">Judul</p>
-                    <p className="text-cream text-sm">{selectedReport.title}</p>
+                    {isEditingReport ? (
+  <input
+    value={editForm.title}
+    onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
+    className="w-full bg-[#222] border border-[#2A2A2A] rounded-xl px-3 py-2 text-xs text-cream"
+  />
+) : (
+  <p className="text-cream text-sm">{selectedReport.title}</p>
+)}
                   </div>
 
                   {selectedReport.description && (
                     <div>
                       <p className="text-[#5C5850] text-[10px] uppercase tracking-widest mb-1">Deskripsi</p>
-                      <p className="text-[#8A8680] text-xs leading-relaxed">{selectedReport.description}</p>
+                      {isEditingReport ? (
+  <textarea
+    value={editForm.description}
+    onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+    rows={4}
+    className="w-full bg-[#222] border border-[#2A2A2A] rounded-xl px-3 py-2 text-xs text-cream"
+  />
+) : (
+  <p className="text-[#8A8680] text-xs leading-relaxed">{selectedReport.description}</p>
+)}
+
                     </div>
                   )}
 
@@ -341,7 +459,30 @@ export default function LaporanSaya() {
                     {selectedReport.category && (
                       <div>
                         <p className="text-[#5C5850] text-[10px] uppercase tracking-widest mb-1">Kategori</p>
-                        <span className="text-xs px-2.5 py-1 rounded-full bg-[#222] text-[#8A8680]">{selectedReport.category}</span>
+                       {isEditingReport ? (
+  <select
+    value={editForm.category_id ?? ""}
+    onChange={(e) =>
+      setEditForm({
+        ...editForm,
+        category_id: Number(e.target.value),
+      })
+    }
+    className="w-full bg-[#222] border border-[#2A2A2A] rounded-xl px-3 py-2 text-xs text-cream"
+  >
+    <option value=""disabled hidden>Pilih kategori</option>
+    {categories.map((c) => (
+      <option key={c.id} value={c.id}>
+        {c.name}
+      </option>
+    ))}
+  </select>
+) : (
+  <span className="text-xs px-2.5 py-1 rounded-full bg-[#222] text-[#8A8680]">
+    {selectedReport.category}
+  </span>
+)}
+
                       </div>
                     )}
                     {selectedReport.tracking_code && (
@@ -352,17 +493,28 @@ export default function LaporanSaya() {
                     )}
                   </div>
 
-                  {selectedReport.location && (
-                    <div>
-                      <p className="text-[#5C5850] text-[10px] uppercase tracking-widest mb-1">Lokasi</p>
-                      <p className="text-[#8A8680] text-xs">{selectedReport.location}</p>
-                    </div>
-                  )}
-
                   <div>
                     <p className="text-[#5C5850] text-[10px] uppercase tracking-widest mb-1">Tanggal Dibuat</p>
                     <p className="text-[#8A8680] text-xs">{new Date(selectedReport.created_at).toLocaleDateString("id-ID", { weekday:"long", day:"numeric", month:"long", year:"numeric" })}</p>
                   </div>
+                  {isEditingReport && (
+  <div className="flex gap-2 pt-2">
+    <button
+      onClick={() => setIsEditingReport(false)}
+      className="text-xs px-3 py-2 text-[#5C5850] hover:text-cream"
+    >
+      Batal
+    </button>
+
+    <button
+      onClick={handleUpdateReport}
+      disabled={savingReport}
+      className="text-xs px-4 py-2 bg-gold text-dark rounded-lg hover:opacity-90 disabled:opacity-50"
+    >
+      {savingReport ? "Menyimpan..." : "Simpan"}
+    </button>
+  </div>
+)}
                 </div>
               </div>
 
@@ -378,7 +530,7 @@ export default function LaporanSaya() {
                 </div>
 
                 {/* Messages */}
-                <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 min-h-0">
+                <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 min-h-0 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
                   {commentsLoading ? (
                     <div className="space-y-3 pt-1">
                       {[...Array(2)].map((_, i) => (

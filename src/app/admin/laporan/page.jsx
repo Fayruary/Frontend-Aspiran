@@ -413,13 +413,7 @@ export default function AdminLaporan() {
                   <button onClick={closeModal} className="text-[#5C5850] hover:text-cream transition-colors"><CloseIcon size={16} /></button>
                 </div>
 
-                <div
-  className="overflow-y-auto flex-1 px-5 py-4 space-y-4"
-  style={{
-    scrollbarWidth: "none",      
-    msOverflowStyle: "none",     
-  }}
->
+               <div className="overflow-y-auto flex-1 px-5 py-4 space-y-4 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
                   {/* Foto */}
                   {images.length > 0 && (
                     <div>
@@ -526,7 +520,7 @@ export default function AdminLaporan() {
                 </div>
 
                 {/* Messages */}
-                <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 min-h-0">
+                <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 min-h-0 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
                   {commentsLoading ? (
                     <div className="space-y-3 pt-1">
                       {[...Array(3)].map((_, i) => (

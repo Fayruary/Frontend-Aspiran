@@ -413,16 +413,22 @@ export default function AdminLaporan() {
                   <button onClick={closeModal} className="text-[#5C5850] hover:text-cream transition-colors"><CloseIcon size={16} /></button>
                 </div>
 
-                <div className="overflow-y-auto flex-1 px-5 py-4 space-y-4">
+                <div
+  className="overflow-y-auto flex-1 px-5 py-4 space-y-4"
+  style={{
+    scrollbarWidth: "none",      
+    msOverflowStyle: "none",     
+  }}
+>
                   {/* Foto */}
                   {images.length > 0 && (
                     <div>
                       <p className="text-[#5C5850] text-[10px] uppercase tracking-widest mb-2">Foto Laporan</p>
-                      <div className="grid grid-cols-3 gap-2">
+                      <div className="grid grid-cols-1 gap-4">
                         {images.map((img, idx) => (
                           <button key={idx} onClick={() => setLightboxImg(imgUrl(img))}
-                            className="relative aspect-square rounded-xl overflow-hidden border border-[#2A2A2A] hover:border-gold/40 transition-colors group">
-                            <img src={imgUrl(img)} alt={`foto ${idx+1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                            className="w-full rounded-xl overflow-hidden border border-[#2A2A2A] hover:border-gold/40 transition-colors group relative">
+                            <img src={imgUrl(img)} alt={`foto ${idx+1}`} className="w-full object-cover max-h-48 group-hover:scale-105 transition-transform duration-300"
                               onError={e => { e.target.parentElement.innerHTML=`<div class="w-full h-full bg-[#222] flex items-center justify-center text-[#3A3A3A] text-xs">Gagal</div>`; }} />
                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
                               <ZoomIcon size={16} className="text-white opacity-0 group-hover:opacity-100 transition-opacity" />

@@ -43,4 +43,13 @@ body {
   .text-cream { color: var(--cream); }
   .text-gold  { color: var(--gold); }
   .text-muted { color: var(--muted); }
+  /* hide scrollbar tapi tetap bisa scroll */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE & Edge */
+  scrollbar-width: none;     /* Firefox */
+}
 }

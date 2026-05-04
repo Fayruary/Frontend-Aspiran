@@ -377,11 +377,22 @@ setIsEditingReport(false);
 
       {/* ── Detail + Comment Modal ──────────────────────────────────────── */}
       {selectedReport && (() => {
-        const st = STATUS_MAP[selectedReport.status] ?? STATUS_MAP.pending;
-        const rawImg = selectedReport.image ?? selectedReport.images ?? selectedReport.photo ?? null;
-        const imageUrl = rawImg ? imgUrl(Array.isArray(rawImg) ? rawImg[0] : rawImg) : null;
 
-        return (
+  let parsedImages = [];
+
+  if (selectedReport.image) {
+    try {
+      parsedImages = JSON.parse(selectedReport.image);
+    } catch {
+      parsedImages = [selectedReport.image];
+    }
+  }
+
+  const imageUrls = parsedImages.map(img => imgUrl(img));
+
+  const st = STATUS_MAP[selectedReport.status] ?? STATUS_MAP.pending;
+
+  return (
           <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-3 lg:p-6" onClick={closeModal}>
             <div className="bg-[#1A1A1A] border border-[#2A2A2A] rounded-2xl w-full max-w-3xl max-h-[92vh] flex flex-col lg:flex-row overflow-hidden" onClick={e => e.stopPropagation()}>
 
@@ -411,20 +422,37 @@ setIsEditingReport(false);
 
                 <div className="overflow-y-auto flex-1 px-5 py-4 space-y-4 [&::-webkit-scrollbar]:hidden [scrollbar-width:none]">
                   {/* Foto */}
-                  {imageUrl && (
-                    <div>
-                      <p className="text-[#5C5850] text-[10px] uppercase tracking-widest mb-2">Foto Laporan</p>
-                      <button onClick={() => setLightboxImg(imageUrl)} className="w-full rounded-xl overflow-hidden border border-[#2A2A2A] hover:border-gold/40 transition-colors group relative">
-                        <img src={imageUrl} alt="foto laporan" className="w-full object-cover max-h-48 group-hover:scale-105 transition-transform duration-300"
-                          onError={e => { e.target.parentElement.innerHTML=`<div class="w-full h-24 bg-[#222] flex items-center justify-center text-[#3A3A3A] text-xs rounded-xl">Gagal memuat foto</div>`; }} />
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
-                          <ZoomIcon size={20} className="text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                        </div>
-                      </button>
-                      <p className="text-[#4A4A4A] text-[10px] mt-1.5">Klik untuk memperbesar</p>
-                    </div>
-                  )}
+                  {imageUrls.length > 0 && (
+  <div>
+    <p className="text-[#5C5850] text-[10px] uppercase tracking-widest mb-2">
+      Foto Laporan
+    </p>
 
+    <div className="grid grid-cols-2 gap-2">
+      {imageUrls.map((img, i) => (
+        <button
+          key={i}
+          onClick={() => setLightboxImg(img)}
+          className="rounded-xl overflow-hidden border border-[#2A2A2A] hover:border-gold/40 transition-colors group relative"
+        >
+          <img
+            src={img}
+            alt="foto laporan"
+            className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+
+          <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 flex items-center justify-center">
+            <ZoomIcon className="text-white opacity-0 group-hover:opacity-100" />
+          </div>
+        </button>
+      ))}
+    </div>
+
+    <p className="text-[#4A4A4A] text-[10px] mt-1.5">
+      Klik foto untuk memperbesar
+    </p>
+  </div>
+)}
                   <div>
                     <p className="text-[#5C5850] text-[10px] uppercase tracking-widest mb-1">Judul</p>
                     {isEditingReport ? (
@@ -669,7 +697,7 @@ setIsEditingReport(false);
 
 // ── Icons ─────────────────────────────────────────────────────────────────
 function GridIcon({ size=16 }) { return <svg width={size} height={size} fill="none" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.5"/></svg>; }
-function FileIcon({ size=16 }) { return <svg width={size} height={size} fill="none" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/><path d="M14 2v6h6M8 13h8M8 17h5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>; }
+function FileIcon({ size=16 }) { return <svg width={size} height={size} fill="none" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="gray" strokeWidth="1.5" strokeLinejoin="round"/><path d="M14 2v6h6M8 13h8M8 17h5" stroke="gray" strokeWidth="1.5" strokeLinecap="round"/></svg>; }
 function PlusIcon({ size=16 }) { return <svg width={size} height={size} fill="none" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>; }
 function MenuIcon({ size=20 }) { return <svg width={size} height={size} fill="none" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>; }
 function LogoutIcon({ size=14 }) { return <svg width={size} height={size} fill="none" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>; }

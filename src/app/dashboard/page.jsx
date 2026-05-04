@@ -254,7 +254,7 @@ export default function UserDashboard() {
             <div className="lg:col-span-3 bg-[#1A1A1A] border border-[#222] rounded-2xl overflow-hidden">
               <div className="flex items-center justify-between px-5 py-4 border-b border-[#222]">
                 <p className="text-cream text-sm font-medium">Laporan Terbaru</p>
-                <Link href="/dashboard/laporan" className="text-gold text-xs hover:underline">Lihat semua</Link>
+                <Link href="/laporan" className="text-gold text-xs hover:underline">Lihat semua</Link>
               </div>
 
               {loading ? (

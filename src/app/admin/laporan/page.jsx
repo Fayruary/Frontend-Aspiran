@@ -292,7 +292,8 @@ export default function AdminLaporan() {
                   ))}
                 </div>
               ) : filtered.length === 0 ? (
-                <div className="text-center py-16">
+                <div className="flex flex-col items-center justify-center py-20 text-center px-6">
+                  <div className="w-12 h-12 rounded-full bg-[#1E1E1E] flex items-center justify-center mb-3"><FileIcon size={20} /></div>
                   <p className="text-[#5C5850] text-sm">Tidak ada laporan yang cocok.</p>
                   {(search || filterStatus !== "semua") && <button onClick={() => { setSearch(""); setFilterStatus("semua"); }} className="text-gold text-xs mt-2 hover:underline">Reset filter →</button>}
                 </div>
@@ -418,11 +419,11 @@ export default function AdminLaporan() {
                   {images.length > 0 && (
                     <div>
                       <p className="text-[#5C5850] text-[10px] uppercase tracking-widest mb-2">Foto Laporan</p>
-                      <div className="grid grid-cols-1 gap-4">
+                      <div className="grid grid-cols-2 gap-2">
                         {images.map((img, idx) => (
                           <button key={idx} onClick={() => setLightboxImg(imgUrl(img))}
                             className="w-full rounded-xl overflow-hidden border border-[#2A2A2A] hover:border-gold/40 transition-colors group relative">
-                            <img src={imgUrl(img)} alt={`foto ${idx+1}`} className="w-full object-cover max-h-48 group-hover:scale-105 transition-transform duration-300"
+                            <img src={imgUrl(img)} alt={`foto ${idx+1}`} className="w-full h-28 sm:h-32 object-cover group-hover:scale-105 transition-transform duration-300"
                               onError={e => { e.target.parentElement.innerHTML=`<div class="w-full h-full bg-[#222] flex items-center justify-center text-[#3A3A3A] text-xs">Gagal</div>`; }} />
                             <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors flex items-center justify-center">
                               <ZoomIcon size={16} className="text-white opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -660,7 +661,7 @@ export default function AdminLaporan() {
 
 // ── Icons ─────────────────────────────────────────────────────────────────
 function GridIcon({ size=16 }) { return <svg width={size} height={size} fill="none" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.5"/></svg>; }
-function FileIcon({ size=16 }) { return <svg width={size} height={size} fill="none" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/><path d="M14 2v6h6M8 13h8M8 17h5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>; }
+function FileIcon({ size=16 }) { return <svg width={size} height={size} fill="none" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="gray" strokeWidth="1.5" strokeLinejoin="round"/><path d="M14 2v6h6M8 13h8M8 17h5" stroke="gray" strokeWidth="1.5" strokeLinecap="round"/></svg>; }
 function ChartIcon({ size=16 }) { return <svg width={size} height={size} fill="none" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>; }
 function EditIcon({ size=14 }) { return <svg width={size} height={size} fill="none" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/></svg>; }
 function EyeIcon({ size=14 }) { return <svg width={size} height={size} fill="none" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" stroke="currentColor" strokeWidth="1.5"/><circle cx="12" cy="12" r="3" stroke="currentColor" strokeWidth="1.5"/></svg>; }

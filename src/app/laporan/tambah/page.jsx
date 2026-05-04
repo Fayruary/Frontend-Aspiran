@@ -27,8 +27,8 @@ export default function TambahLaporan() {
     category_id: "",
   });
 
-  const [image, setImage] = useState(null);
-  const [preview, setPreview] = useState(null);
+  const [images, setImages] = useState([]);
+const [previews, setPreviews] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -49,12 +49,18 @@ export default function TambahLaporan() {
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
 
+  const removeAll = () => {
+  setImages([]);
+  setPreviews([]);
+  fileRef.current.value = "";
+};
+
   const handleImage = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setImage(file);
-    setPreview(URL.createObjectURL(file));
-  };
+  const files = Array.from(e.target.files);
+
+  setImages(files);
+  setPreviews(files.map(file => URL.createObjectURL(file)));
+};
 
   const handleDrop = (e) => {
     e.preventDefault();
@@ -88,7 +94,9 @@ export default function TambahLaporan() {
       data.append("description", form.description);
       data.append("category_id", Number(form.category_id));
 
-      if (image) data.append("image", image);
+      images.forEach((file) => {
+  data.append("images", file);
+});
 
       // ❌ HAPUS user_id (backend sudah pakai req.user.id)
       const res = await axios.post(
@@ -252,29 +260,38 @@ export default function TambahLaporan() {
               Foto Bukti <span className="text-[#3A3A3A]">(opsional)</span>
             </label>
 
-            {preview ? (
-              <div className="relative rounded-xl overflow-hidden border border-[#2A2A2A]">
-                <img src={preview} alt="preview" className="w-full h-48 object-cover" />
-                <button
-                  type="button"
-                  onClick={removeImage}
-                  className="absolute top-3 right-3 w-8 h-8 bg-black/70 hover:bg-black rounded-full flex items-center justify-center text-cream transition-colors"
-                >
-                  <svg width="14" height="14" fill="none" viewBox="0 0 24 24">
-                    <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-                  </svg>
-                </button>
-                <div className="absolute bottom-3 left-3 bg-black/60 text-cream text-[10px] px-2 py-1 rounded-full">
-                  {image?.name}
-                </div>
-              </div>
-            ) : (
-              <div
-                onDrop={handleDrop}
-                onDragOver={(e) => e.preventDefault()}
-                onClick={() => fileRef.current?.click()}
-                className="border-2 border-dashed border-[#2A2A2A] hover:border-[#3A3A3A] rounded-xl p-8 text-center cursor-pointer transition-colors group"
-              >
+            {previews.length > 0 ? (
+  <div className="grid grid-cols-2 gap-2">
+    {previews.map((src, index) => (
+      <div key={index} className="relative rounded-xl overflow-hidden border border-[#2A2A2A]">
+        <img src={src} className="w-full h-40 object-cover" />
+
+        <button
+          type="button"
+          onClick={() => {
+            const newImages = [...images];
+            const newPreviews = [...previews];
+
+            newImages.splice(index, 1);
+            newPreviews.splice(index, 1);
+
+            setImages(newImages);
+            setPreviews(newPreviews);
+          }}
+          className="absolute top-2 right-2 w-7 h-7 bg-black/70 rounded-full text-white"
+        >
+          ✕
+        </button>
+      </div>
+    ))}
+  </div>
+) : (
+  <div
+    onDrop={handleDrop}
+    onDragOver={(e) => e.preventDefault()}
+    onClick={() => fileRef.current?.click()}
+    className="border-2 border-dashed border-[#2A2A2A] hover:border-[#3A3A3A] rounded-xl p-8 text-center cursor-pointer"
+  >
                 <div className="w-10 h-10 rounded-full bg-[#1E1E1E] flex items-center justify-center mx-auto mb-3 group-hover:bg-[#252525] transition-colors">
                   <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
                     <path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12" stroke="#5C5850" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -286,12 +303,13 @@ export default function TambahLaporan() {
             )}
 
             <input
-              ref={fileRef}
-              type="file"
-              accept="image/png,image/jpg,image/jpeg"
-              onChange={handleImage}
-              className="hidden"
-            />
+  ref={fileRef}
+  type="file"
+  accept="image/png,image/jpg,image/jpeg"
+  multiple
+  onChange={handleImage}
+  className="hidden"
+/>
           </div>
 
           {/* Info box */}

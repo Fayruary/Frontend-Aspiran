@@ -259,7 +259,12 @@ setIsEditingReport(false);
             <div className="flex items-center gap-3 mb-3">
               <div className="w-8 h-8 rounded-full bg-gold/20 flex items-center justify-center text-gold text-xs font-bold">{user.username?.charAt(0)?.toUpperCase() || "U"}</div>
               <div className="min-w-0">
-                <p className="text-cream text-xs font-medium truncate">{user.username || "User"}</p>
+                <Link
+    href="/profile"
+    className="text-cream text-xs font-medium truncate hover:text-gold transition-colors cursor-pointer block"
+  >
+    {user.username || "User"}
+  </Link>
                 <p className="text-[#5C5850] text-[10px] truncate">{user.email || ""}</p>
               </div>
             </div>

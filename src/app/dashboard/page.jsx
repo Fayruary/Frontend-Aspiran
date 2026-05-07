@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 
 
-
 const API = "http://localhost:5000/api";
 
 const STATUS_MAP = {
@@ -135,9 +134,12 @@ export default function UserDashboard() {
     </div>
 
     <div className="min-w-0">
-      <p className="text-cream text-xs font-medium truncate">
-        {user.username || "User"}
-      </p>
+      <Link
+    href="/profile"
+    className="text-cream text-xs font-medium truncate hover:text-gold transition-colors cursor-pointer block"
+  >
+    {user.username || "User"}
+  </Link>
       <p className="text-[#5C5850] text-[10px] truncate">
         {user.email || "User"}
       </p>

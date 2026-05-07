@@ -8,7 +8,12 @@ import Link from "next/link";
 export default function RegisterPage() {
   const router = useRouter();
 
-  const [form, setForm] = useState({ username: "", email: "", password: "" });
+  const [form, setForm] = useState({
+  nik: "",
+  username: "",
+  email: "",
+  password: "",
+});
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -22,13 +27,14 @@ export default function RegisterPage() {
 
   try {
     const res = await axios.post(
-      "http://localhost:5000/api/auth/register",
-      {
-        username: form.username,
-        email: form.email,
-        password: form.password,
-      }
-    );
+  "http://localhost:5000/api/auth/register",
+  {
+    nik: form.nik,
+    username: form.username,
+    email: form.email,
+    password: form.password,
+  }
+);
 
     // sukses register
     if (res.data) {
@@ -116,6 +122,27 @@ export default function RegisterPage() {
 
           {/* Form */}
           <form onSubmit={handleRegister} className="space-y-3">
+
+            {/* NIK */}
+<div>
+  <label className="block text-xs text-[#5C5850] mb-1.5 ml-1">
+    NIK
+  </label>
+
+  <input
+    type="text"
+    name="nik"
+    placeholder="Masukkan 16 digit NIK"
+    value={form.nik}
+    onChange={(e) => {
+      const value = e.target.value.replace(/\D/g, "");
+      setForm({ ...form, nik: value });
+    }}
+    required
+    maxLength={16}
+    className="w-full px-4 py-3 rounded-xl bg-[#1E1E1E] text-cream text-sm border border-[#2A2A2A] placeholder-[#3A3A3A] focus:outline-none focus:border-gold transition-colors"
+  />
+</div>
 
             {/* Username */}
             <div className="group">

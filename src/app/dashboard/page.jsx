@@ -4,6 +4,13 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { User } from "lucide-react";
+import {
+  Camera,
+  MapPin,
+  FileText,
+  BellRing,
+} from "lucide-react";
 
 
 const API = "http://localhost:5000/api";
@@ -20,6 +27,29 @@ const NAV = [
   { label: "Dashboard",    icon: GridIcon, href: "/dashboard"       },
   { label: "Laporan Saya", icon: FileIcon, href: "/laporan" },
   { label: "Buat Laporan", icon: PlusIcon, href: "/laporan/tambah"  },
+];
+
+const TIPS = [
+  {
+    icon: Camera,
+    title: "Sertakan foto yang jelas",
+    desc: "Foto berkualitas baik mempercepat verifikasi laporan Anda.",
+  },
+  {
+    icon: MapPin,
+    title: "Cantumkan lokasi akurat",
+    desc: "Alamat lengkap membantu petugas merespons lebih cepat.",
+  },
+  {
+    icon: FileText,
+    title: "Deskripsi yang detail",
+    desc: "Jelaskan masalah secara lengkap agar mudah ditindaklanjuti.",
+  },
+  {
+    icon: BellRing,
+    title: "Pantau status laporan",
+    desc: "Gunakan kode tracking untuk memantau perkembangan laporan.",
+  },
 ];
 
 export default function UserDashboard() {
@@ -169,8 +199,8 @@ export default function UserDashboard() {
               <MenuIcon size={20} />
             </button>
             <div>
-              <p className="text-cream text-sm font-medium">
-  Selamat datang{user?.username ? `, ${user.username}` : ""} 👋
+              <p className="text-cream text-sm font-medium flex items-center gap-2">
+  Selamat datang{user?.username ? `, ${user.username}` : ""} 
 </p>
               <p className="text-[#5C5850] text-xs">Pantau semua laporan Anda</p>
             </div>
@@ -312,6 +342,27 @@ export default function UserDashboard() {
                   })}
                 </div>
               )}
+            </div>
+          </div>
+
+             {/* ── Tips ── */}
+          <div className="bg-[#1A1A1A] border border-[#222] rounded-2xl p-5">
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <p className="text-[#5C5850] text-xs mb-0.5">Panduan</p>
+                <p className="text-cream text-sm font-medium">Tips Membuat Laporan yang Baik</p>
+              </div>
+            </div>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+              {TIPS.map((tip, i) => (
+                <div key={i} className="bg-[#141414] border border-[#222] rounded-xl p-3.5">
+                  <div className="w-9 h-9 rounded-xl bg-[#1E1E1E] flex items-center justify-center mb-2">
+  <tip.icon size={18} className="text-gold" />
+</div>
+                  <p className="text-cream text-xs font-medium mb-1">{tip.title}</p>
+                  <p className="text-[#5C5850] text-[10px] leading-relaxed">{tip.desc}</p>
+                </div>
+              ))}
             </div>
           </div>
 

@@ -4,20 +4,15 @@ import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import axios from "axios";
-import { Road, Trash2, Shield, Trees } from "lucide-react";
+import { Road, Trash2, Shield, Trees, BadgeAlert } from "lucide-react";
 
 
-const CATEGORIES = [
-  { id: 1, name: "Jalan Rusak", icon: Road },
-  { id: 2, name: "Sampah", icon: Trash2 },
-  { id: 3, name: "Keamanan", icon: Shield },
-  { id: 4, name: "Fasilitas Umum", icon: Trees },
-];
 
 export default function TambahLaporan() {
   const router = useRouter();
   const fileRef = useRef(null);
 
+  const [categories, setCategories] = useState([]);
   // ✅ FIX: user state harus ada
   const [user, setUser] = useState(null);
 
@@ -33,6 +28,22 @@ const [previews, setPreviews] = useState([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+
+  useEffect(() => {
+  const fetchCategories = async () => {
+    try {
+      const res = await axios.get(
+        "http://localhost:5000/api/categories"
+      );
+
+      setCategories(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  fetchCategories();
+}, []);
   // ambil user dari localStorage
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user") || "null");
@@ -217,8 +228,8 @@ const [previews, setPreviews] = useState([]);
               Kategori <span className="text-red-500">*</span>
             </label>
             <div className="grid grid-cols-2 gap-2">
-              {CATEGORIES.map((cat) => {
-  const Icon = cat.icon;
+{categories.map((cat) => {
+  const Icon =  BadgeAlert;
 
   return (
     <button

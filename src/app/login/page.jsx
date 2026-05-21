@@ -35,11 +35,15 @@ export default function LoginPage() {
     localStorage.setItem("token", token);
     localStorage.setItem("user", JSON.stringify(user));
 
-    if (user?.role === "admin") {
-     router.push("/admin");
-    } else {
-    router.push("/dashboard");
-    }
+   if (user?.role === "superadmin") {
+  router.push("/superadmin");
+
+} else if (user?.role === "admin") {
+  router.push("/admin");
+
+} else {
+  router.push("/dashboard");
+}
 
   } catch (err) {
     console.log(err);

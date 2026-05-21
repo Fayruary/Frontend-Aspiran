@@ -20,6 +20,7 @@ const STATUS_OPTIONS = ["pending", "verified", "process", "done", "rejected"];
 const NAV_ADMIN = [
   { label: "Dashboard",     icon: GridIcon,  href: "/admin"           },
   { label: "Semua Laporan", icon: FileIcon,  href: "/admin/laporan"   },
+  { label: "Kategori",      icon: TagIcon,   href: "/admin/kategori"  },
   { label: "Statistik",     icon: ChartIcon, href: "/admin/statistik" },
 ];
 
@@ -661,6 +662,9 @@ export default function AdminLaporan() {
 
 // ── Icons ─────────────────────────────────────────────────────────────────
 function GridIcon({ size=16 }) { return <svg width={size} height={size} fill="none" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.5"/></svg>; }
+function TagIcon({ size = 16 }) {
+  return <svg width={size} height={size} fill="none" viewBox="0 0 24 24"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/><circle cx="7" cy="7" r="1.5" fill="currentColor"/></svg>;
+}
 function FileIcon({ size=16 }) { return <svg width={size} height={size} fill="none" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="gray" strokeWidth="1.5" strokeLinejoin="round"/><path d="M14 2v6h6M8 13h8M8 17h5" stroke="gray" strokeWidth="1.5" strokeLinecap="round"/></svg>; }
 function ChartIcon({ size=16 }) { return <svg width={size} height={size} fill="none" viewBox="0 0 24 24"><path d="M18 20V10M12 20V4M6 20v-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/></svg>; }
 function EditIcon({ size=14 }) { return <svg width={size} height={size} fill="none" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/></svg>; }

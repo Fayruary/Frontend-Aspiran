@@ -63,8 +63,8 @@ export default function UserDashboard() {
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 
   useEffect(() => {
-  const token = localStorage.getItem("token");
-  const storedUser = localStorage.getItem("user");
+  const token = sessionStorage.getItem("token");
+  const storedUser = sessionStorage.getItem("user");
 
   if (!token || !storedUser) {
     router.push("/login");
@@ -404,8 +404,8 @@ export default function UserDashboard() {
 
         <button
           onClick={() => {
-            localStorage.removeItem("token");
-            localStorage.removeItem("user");
+            sessionStorage.removeItem("token");
+            sessionStorage.removeItem("user");
             router.replace("/login");
           }}
           className="px-4 py-2 text-xs bg-red-500 text-white rounded-lg hover:bg-red-600"

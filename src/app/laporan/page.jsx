@@ -63,8 +63,8 @@ const [savingReport, setSavingReport] = useState(false);
   const [deletingCommentId, setDeletingCommentId] = useState(null);
 
   useEffect(() => {
-    const token      = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
+    const token      = sessionStorage.getItem("token");
+    const storedUser = sessionStorage.getItem("user");
     if (!token || !storedUser) { router.push("/login"); return; }
     try {
       const userData = JSON.parse(storedUser);
@@ -88,7 +88,7 @@ const [savingReport, setSavingReport] = useState(false);
 
   // ── Comments ──────────────────────────────────────────────────────────
   const fetchComments = async (laporanId) => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     try {
       setCommentsLoading(true);
       const res = await axios.get(`${API}/comments/${laporanId}`, { headers: { Authorization: `Bearer ${token}` } });
@@ -99,7 +99,7 @@ const [savingReport, setSavingReport] = useState(false);
 
   const handleSendComment = async () => {
     if (!newComment.trim() || !selectedReport) return;
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     setSendingComment(true);
     try {
       await axios.post(`${API}/comments`, { comment: newComment.trim(), laporan_id: selectedReport.id },
@@ -114,7 +114,7 @@ const [savingReport, setSavingReport] = useState(false);
 
 useEffect(() => {
   const fetchCategories = async () => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     const res = await axios.get(`${API}/categories`, {
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -126,7 +126,7 @@ useEffect(() => {
 
   const handleEditComment = async (commentId) => {
     if (!editCommentText.trim()) return;
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     setSavingComment(true);
     try {
       await axios.put(`${API}/comments/${commentId}`, { comment: editCommentText.trim() },
@@ -139,7 +139,7 @@ useEffect(() => {
   };
 
   const handleDeleteComment = async (commentId) => {
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     setDeletingCommentId(commentId);
     try {
       await axios.delete(`${API}/comments/${commentId}`, { headers: { Authorization: `Bearer ${token}` } });
@@ -149,7 +149,7 @@ useEffect(() => {
   };
 
   const handleUpdateReport = async () => {
-  const token = localStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
 
   if (!editForm.title || !editForm.description) {
     setError("Judul dan deskripsi wajib diisi");
@@ -690,7 +690,7 @@ setIsEditingReport(false);
             <p className="text-[#5C5850] text-xs mb-5">Apakah kamu yakin ingin keluar dari akun ini?</p>
             <div className="flex gap-2 justify-end">
               <button onClick={() => setShowLogoutConfirm(false)} className="px-4 py-2 text-xs text-[#5C5850] hover:text-cream">Batal</button>
-              <button onClick={() => { localStorage.removeItem("token"); localStorage.removeItem("user"); router.replace("/login"); }}
+              <button onClick={() => { sessionStorage.removeItem("token"); sessionStorage.removeItem("user"); router.replace("/login"); }}
                 className="px-4 py-2 text-xs bg-red-500 text-white rounded-lg hover:bg-red-600">Keluar</button>
             </div>
           </div>

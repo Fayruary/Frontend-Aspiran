@@ -29,8 +29,8 @@ export default function AdminKategori() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
-    const token      = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
+    const token      = sessionStorage.getItem("token");
+    const storedUser = sessionStorage.getItem("user");
     if (!token || !storedUser) { router.push("/login"); return; }
     try {
       const u = JSON.parse(storedUser);
@@ -59,7 +59,7 @@ export default function AdminKategori() {
     setAdding(true);
     setError("");
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       await axios.post(`${API}/categories`, { name: newName.trim() }, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -77,7 +77,7 @@ export default function AdminKategori() {
     setDeletingId(id);
     setError("");
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
       await axios.delete(`${API}/categories/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -93,8 +93,8 @@ export default function AdminKategori() {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    sessionStorage.removeItem("token");
+    sessionStorage.removeItem("user");
     router.push("/login");
   };
 
@@ -333,8 +333,8 @@ export default function AdminKategori() {
 
         <button
           onClick={() => {
-            localStorage.removeItem("token");
-            localStorage.removeItem("user");
+            sessionStorage.removeItem("token");
+            sessionStorage.removeItem("user");
             router.replace("/login");
           }}
           className="px-4 py-2 text-xs bg-red-500 text-white rounded-lg hover:bg-red-600"

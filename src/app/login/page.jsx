@@ -32,8 +32,8 @@ export default function LoginPage() {
     const { token, user } = res.data;
 
     // simpan token + user
-    localStorage.setItem("token", token);
-    localStorage.setItem("user", JSON.stringify(user));
+    sessionStorage.setItem("token", token);
+    sessionStorage.setItem("user", JSON.stringify(user));
 
    if (user?.role === "superadmin") {
   router.push("/superadmin");

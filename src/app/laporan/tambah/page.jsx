@@ -44,10 +44,10 @@ const [previews, setPreviews] = useState([]);
 
   fetchCategories();
 }, []);
-  // ambil user dari localStorage
+  // ambil user dari sessionStorage
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem("user") || "null");
-    const token = localStorage.getItem("token");
+    const storedUser = JSON.parse(sessionStorage.getItem("user") || "null");
+    const token = sessionStorage.getItem("token");
 
     if (!storedUser || !token) {
       router.push("/login");
@@ -98,7 +98,7 @@ const [previews, setPreviews] = useState([]);
     setError("");
 
     try {
-      const token = localStorage.getItem("token");
+      const token = sessionStorage.getItem("token");
 
       const data = new FormData();
       data.append("title", form.title);

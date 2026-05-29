@@ -47,8 +47,8 @@ export default function SuperAdminDashboard() {
   const [filterRole, setFilterRole]   = useState("semua");
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const user  = localStorage.getItem("user");
+    const token = sessionStorage.getItem("token");
+    const user  = sessionStorage.getItem("user");
     if (!token || !user) { router.push("/login"); return; }
 
     try {
@@ -75,7 +75,7 @@ export default function SuperAdminDashboard() {
     }
   };
 
-  const token = () => localStorage.getItem("token");
+  const token = () => sessionStorage.getItem("token");
 
   // ── CREATE ────────────────────────────────────────────────────────────
   const handleCreate = async () => {
@@ -536,8 +536,8 @@ export default function SuperAdminDashboard() {
             <button onClick={() => setShowLogoutConfirm(false)} className="px-4 py-2 text-xs text-[#5C5850] hover:text-cream">Batal</button>
             <button
               onClick={() => {
-                localStorage.removeItem("token");
-                localStorage.removeItem("user");
+                sessionStorage.removeItem("token");
+                sessionStorage.removeItem("user");
                 router.replace("/login");
               }}
               className="px-4 py-2 text-xs bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium"

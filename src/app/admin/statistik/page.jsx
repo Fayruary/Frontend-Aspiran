@@ -36,8 +36,8 @@ export default function AdminStatistik() {
   const [animatedValues, setAnimatedValues] = useState({});
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const user  = localStorage.getItem("user");
+    const token = sessionStorage.getItem("token");
+    const user  = sessionStorage.getItem("user");
     if (!token || !user) { router.push("/login"); return; }
     try {
       const adminData = JSON.parse(user);
@@ -618,7 +618,7 @@ export default function AdminStatistik() {
             <p className="text-[#5C5850] text-xs mb-5">Apakah kamu yakin ingin keluar dari akun ini?</p>
             <div className="flex gap-2 justify-end">
               <button onClick={() => setShowLogoutConfirm(false)} className="px-4 py-2 text-xs text-[#5C5850] hover:text-cream">Batal</button>
-              <button onClick={() => { localStorage.removeItem("token"); localStorage.removeItem("user"); router.replace("/login"); }}
+              <button onClick={() => { sessionStorage.removeItem("token"); sessionStorage.removeItem("user"); router.replace("/login"); }}
                 className="px-4 py-2 text-xs bg-red-500 text-white rounded-lg hover:bg-red-600">Logout</button>
             </div>
           </div>

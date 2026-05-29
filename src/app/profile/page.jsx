@@ -47,8 +47,8 @@ export default function ProfilePage() {
   const [pwMsg, setPwMsg]         = useState({ text: "", ok: false });
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const stored = localStorage.getItem("user");
+   const token = sessionStorage.getItem("token");
+const stored = sessionStorage.getItem("user");
     if (!token || !stored) { router.push("/login"); return; }
     try {
       const u = JSON.parse(stored);
@@ -70,14 +70,14 @@ export default function ProfilePage() {
   const handleSaveUsername = async () => {
     if (!username.trim()) { setNameMsg({ text: "Username tidak boleh kosong.", ok: false }); return; }
     if (username.trim() === user.username) { setNameMsg({ text: "Tidak ada perubahan.", ok: false }); return; }
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     setSavingName(true); setNameMsg({ text: "", ok: false });
     try {
       const res = await axios.put(`${API}/users/me`, { username: username.trim() },
         { headers: { Authorization: `Bearer ${token}` } });
       const updated = { ...user, username: res.data.user?.username ?? username.trim() };
       setUser(updated);
-      localStorage.setItem("user", JSON.stringify(updated));
+      sessionStorage.setItem("user", JSON.stringify(updated));
       setNameMsg({ text: "Username berhasil diperbarui.", ok: true });
     } catch (err) {
       setNameMsg({ text: err.response?.data?.message || "Gagal memperbarui username.", ok: false });
@@ -91,7 +91,7 @@ export default function ProfilePage() {
     if (newPw.length < 6) { setPwMsg({ text: "Password baru minimal 6 karakter.", ok: false }); return; }
     if (newPw !== confirmPw) { setPwMsg({ text: "Konfirmasi password tidak cocok.", ok: false }); return; }
     if (newPw === oldPw) { setPwMsg({ text: "Password baru tidak boleh sama dengan yang lama.", ok: false }); return; }
-    const token = localStorage.getItem("token");
+    const token = sessionStorage.getItem("token");
     setSavingPw(true);
     try {
       await axios.put(`${API}/users/me/password`, { oldPassword: oldPw, newPassword: newPw },
@@ -473,7 +473,7 @@ export default function ProfilePage() {
             <p className="text-[#5C5850] text-xs mb-5">Apakah kamu yakin ingin keluar dari akun ini?</p>
             <div className="flex gap-2 justify-end">
               <button onClick={() => setShowLogout(false)} className="px-4 py-2 text-xs text-[#5C5850] hover:text-cream">Batal</button>
-              <button onClick={() => { localStorage.removeItem("token"); localStorage.removeItem("user"); router.replace("/login"); }}
+              <button onClick={() => { sessionStorage.removeItem("token"); sessionStorage.removeItem("user"); router.replace("/login"); }}
                 className="px-4 py-2 text-xs bg-red-500 text-white rounded-lg hover:bg-red-600">Keluar</button>
             </div>
           </div>
